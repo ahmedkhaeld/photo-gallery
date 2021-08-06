@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php include("init.php"); ?>
 <html lang="en">
 
 <head>
