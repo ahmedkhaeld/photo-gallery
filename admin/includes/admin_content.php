@@ -9,11 +9,29 @@
             <small>Subheading</small>
         </h1>
         <?php 
-        $database=new Database();
-        $sql="SELECT * FROM users WHERE id=1";
-        $result=$database->query($sql);
-        $user_found=mysqli_fetch_array($result);
-        echo $user_found['username'];
+
+        // $found_user=User::find_all_users($database);
+        // while($row=mysqli_fetch_array($found_user)) {
+        //     echo $row['username'];
+        //     echo "<br/>" ;
+        // }
+        // $found_user=User::find_user_by_id($database, 2);
+        // echo $found_user['username'];
+    //    echo $user->id = $found_user['id'].'<br/>';
+    //    echo $user->username = $found_user['username'].'<br/>';
+    //    echo $user->password = $found_user['password'].'<br/>';
+    //    echo $user->first_name = $found_user['first_name'].'<br/>';
+    //    echo $user->last_name = $found_user['last_name'].'<br/>';
+
+    $users=User::find_all_users($database);
+    foreach($users as $user){
+        echo $user->username.'<br/>';
+    }
+    echo '<br/>';
+    $found_user=User::find_user_by_id($database, 2);
+     echo $found_user->username;
+        
+      
         ?>
         <ol class="breadcrumb">
             <li>
