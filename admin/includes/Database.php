@@ -40,6 +40,10 @@ class Database{
         return $this->connection->insert_id;
     }
 
+    public function pull_user_id() {
+        return mysqli_insert_id($this->connection);
+    }
+
 
 
 

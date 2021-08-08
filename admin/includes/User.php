@@ -54,6 +54,23 @@ class User {
          return array_key_exists($the_attribute,$user_object_properties);
     }
 
+    public function create(Database $database) {
+        $sql="INSERT INTO users (username, password,first_name,last_name)";
+        $sql.= " VALUES (' ";
+        $sql.=$database->escape_string($this->username) . "','";
+        $sql.=$database->escape_string($this->password) . "','";
+        $sql.=$database->escape_string($this->first_name) . "','";
+        $sql.=$database->escape_string($this->last_name) . "')";
+
+        if($database->query($sql)) {
+            $this->id=$database->pull_user_id();
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
 
 
 

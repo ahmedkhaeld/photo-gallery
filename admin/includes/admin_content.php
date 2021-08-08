@@ -10,7 +10,11 @@
         </h1>
         <?php 
 
-     
+        $user->username="ahmedkhaled";
+        $user->password="ahmed";
+        $user->first_name="ahmed";
+        $user->last_name="khaled";
+        $user->create($database);
       
         ?>
         <ol class="breadcrumb">
