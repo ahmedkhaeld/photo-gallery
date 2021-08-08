@@ -16,6 +16,14 @@ class User {
         return $the_object_array;
     }
 
+    public static function verify_user(Database $database, $username, $password){
+        $username=$database->escape_string($username);
+        $password=$database->escape_string($password);
+        $sql = "SELECT * FROM users WHERE username = '{$username}' AND password = '{$password}' LIMIT 1";
+        $the_result_array=self::find_this_query( $database, $sql);
+        return  !empty ($the_result_array)? array_shift($the_result_array): false;   
+    }
+
 
     public static function find_all_users(Database $database) {
         
