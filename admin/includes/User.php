@@ -6,6 +6,7 @@ class User {
     public $password;
     public $first_name;
     public $last_name;
+    protected static $db_table = 'users';
 
     public static function find_this_query(Database $database, $sql){
         $result_set=$database->query($sql);
@@ -55,7 +56,7 @@ class User {
     }
 
     public function create(Database $database) {
-        $sql="INSERT INTO users (username, password,first_name,last_name)";
+        $sql="INSERT INTO " .self::$db_table . " (username, password,first_name,last_name)";
         $sql.= " VALUES (' ";
         $sql.=$database->escape_string($this->username) . "','";
         $sql.=$database->escape_string($this->password) . "','";
@@ -71,8 +72,12 @@ class User {
 
     }
 
+    public function save(Database $database){
+        return isset($this->id) ? $this->udpate($database)  : $this->create($database);
+    }
+
     public function udpate(Database $database) {
-        $sql="UPDATE users SET ";
+        $sql="UPDATE " .self::$db_table . " SET ";
         $sql.="username='".$database->escape_string($this->username)."',";
         $sql.="password='".$database->escape_string($this->password)."',";
         $sql.="first_name='".$database->escape_string($this->first_name)."',";
@@ -83,13 +88,13 @@ class User {
     }
 
     public function delete($database){
-        $sql="DELETE FROM users ";
+        $sql="DELETE FROM " .self::$db_table . " ";
         $sql.="WHERE id=". $database->escape_string($this->id);
         $sql.=" LIMIT 1";
         $database->query($sql);
         return (mysqli_affected_rows($database->connection)==1) ? true : false;
 
-    }
+    } 
 
 
 

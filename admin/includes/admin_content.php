@@ -10,18 +10,12 @@
         </h1>
         <?php 
 
-        // $user->username="ahmedkhaled";
-        // $user->password="ahmed";
-        // $user->first_name="ahmed";
-        // $user->last_name="khaled";
-        // $user->create($database);
+        
 
-        // $update_user=User::find_user_by_id($database,3);
-        // $update_user->last_name="al-saiedy";
-        // $update_user->udpate($database);
-
-        $user=User::find_user_by_id($database,1);
+        $user=User::find_user_by_id($database,2);
         $user->delete($database);
+        
+     
 
 
       
