@@ -12,9 +12,14 @@
 
         
 
-        $user=User::find_user_by_id($database,2);
-        $user->delete($database);
-        
+        $user=User::find_user_by_id($database,6);
+        // $user->username="hamo";
+        // $user->udpate($database);
+        $user->username="Aia ehab";
+        $user->password="l1000times";
+        $user->first_name="Aia";
+        $user->last_name="Ehab";
+        $user->update($database);
      
 
 
