@@ -5,22 +5,32 @@
         redirect("login.php");
     } 
 ?>
-<?php
+<?php 
+    
+    if(empty($_GET['id']))
+    {
+        redirect('photos.php');
+    }
 
-    if(isset($_GET['delete'])) {
+?>
+
+<?php
+    if(isset($_GET['delete'])) 
+    {
 
         $comment = Comment::find_by_id($database,$_GET['delete']);
 
         if($comment) {
-
+            
             $session->message("The comment with {$comment->id} has been deleted!");
             $comment->delete();
-            redirect("comments.php");
-
+            
         }
     }
-
 ?>
+
+
+
 <!-- Navigation -->
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -40,8 +50,6 @@
                 <h1 class="page-header">
                     Comments
                 </h1>
-                <p class="bg-success"><?php echo $message;?></p>
-
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -55,7 +63,7 @@
                     <tbody>
                         <?php
 
-                            $comments = Comment::find_all($database);
+                            $comments=Comment::find_the_comments($database,$_GET['id']);
                             if($comments)
                             {
                                 foreach($comments as $comment) {
@@ -67,7 +75,7 @@
                                     echo "<td> {$comment->author} </td>";
                                     echo "<td> {$comment->body} </td>";
                                     echo "<td><a href='../photo.php?view={$photo->id}'><img src='{$path}' height=120 width=200/></a></td>";
-                                    echo "<td> <a href='comments.php?delete=$comment->id'>Delete</a> </td>";
+                                    echo "<td> <a href='comment_photo.php?delete=$comment->id'>Delete</a> </td>";
                                     echo "</tr>";
                                 }
                             }

@@ -1,12 +1,22 @@
 <?php 
 
-
-
-
 class Db_object 
 {
-    protected static $db_table = 'users';
-    protected static $db_table_fields = ['username', 'password', 'first_name', 'last_name'];
+    protected static $db_table ;
+    protected static $db_table_fields ;
+    public $errors=[];
+    public $upload_errors_array =
+    [
+        UPLOAD_ERR_OK => "There is no error, the file uploaded with success",
+        UPLOAD_ERR_INI_SIZE => "Exceeds php.ini upload_max_filesize ",
+        UPLOAD_ERR_FORM_SIZE=> "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+        UPLOAD_ERR_PARTIAL => "The uploaded file was only partially uploaded",
+        UPLOAD_ERR_NO_FILE => "No file was uploaded",
+        UPLOAD_ERR_NO_TMP_DIR => "Missing a temporary folder",
+        UPLOAD_ERR_CANT_WRITE => "Failed to write file to disk.",
+        UPLOAD_ERR_EXTENSION => "A PHP extension stopped the file upload."
+    ];
+
 
 
     public static function find_by_query(Database $database, $sql)
@@ -27,10 +37,10 @@ class Db_object
 
     }
 
-    public static function find_by_id( Database $database, int $user_id)
+    public static function find_by_id( Database $database, int $id)
     {
       
-        $the_result_array=static::find_by_query( $database, "SELECT * FROM " . static::$db_table. " WHERE id = $user_id");
+        $the_result_array=static::find_by_query( $database, "SELECT * FROM " . static::$db_table. " WHERE id = $id");
         return  !empty ($the_result_array)? array_shift($the_result_array): false;   
     }
 
@@ -38,21 +48,21 @@ class Db_object
     {
         // this a User object. attributes are class property
         $calling_class =get_called_class();
-        $user_object=new $calling_class;
+        $the_object=new $calling_class;
         foreach ($the_record as $the_attribute=> $value)
         {
-            if ($user_object->has_the_attribute( $the_attribute))
+            if ($the_object->has_the_attribute( $the_attribute))
             {
-                $user_object->$the_attribute=$value;
+                $the_object->$the_attribute=$value;
             }
         }
-        return $user_object;
+        return $the_object;
     }
 
     private function has_the_attribute( $the_attribute)
     {
-        $user_object_properties=get_object_vars($this);
-         return array_key_exists($the_attribute,$user_object_properties);
+        $the_object_properties=get_object_vars($this);
+         return array_key_exists($the_attribute,$the_object_properties);
     }
 
     protected function properties()
@@ -116,22 +126,32 @@ class Db_object
         return (mysqli_affected_rows($database->connection)==1) ? true : false;
     }
 
-    public function delete($database)
+    public function delete()
     {
+        global $database;
         $sql="DELETE FROM " .static::$db_table . " ";
         $sql.="WHERE id=". $database->escape_string($this->id);
         $sql.=" LIMIT 1";
         $database->query($sql);
         return (mysqli_affected_rows($database->connection)==1) ? true : false;
 
-    } 
+    }
+    
+    public static function count_all(Database $database)
+    {
+        $sql="SELECT COUNT(*) FROM " .static::$db_table;
+        $result_set=$database->query($sql);
+        $row=mysqli_fetch_array($result_set);
+        return array_shift($row);
+
+    }
 
 
 
 
+   
 
 
-
-}
+} // end of class
 
 ?>

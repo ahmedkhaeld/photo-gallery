@@ -1,42 +1,86 @@
 <?php include("includes/header.php"); ?>
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <?php include("includes/top_nav.php"); ?>
+ <?php if(!$session->get_signed_in()) { redirect("login.php");} ?>
 
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <?php include("includes/side_bar.php"); ?>
-            <!-- /.navbar-collapse -->
-        </nav>
 
-        <div id="page-wrapper">
-        <div class="container-fluid">
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<?php include("includes/top_nav.php"); ?>
+<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+<?php include("includes/side_bar.php"); ?>
+<!-- /.navbar-collapse -->
+</nav>
+<div id="page-wrapper">
 
-<!-- Page Heading -->
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            Users
-            <small>Subheading</small>
-        </h1>
-        <ol class="breadcrumb">
-            <li>
-                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
-            </li>
-            <li class="active">
-                <i class="fa fa-file"></i> Blank Page
-            </li>
-        </ol>
-    </div>
-</div>
-<!-- /.row -->
+    <div class="container-fluid">
 
-</div>
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Users
+                </h1>
+                <p class="bg-success">
+                    <?php echo $message;  ?>
+                </p>
 
-            <!-- /.container-fluid -->
+                <a href="add_user.php" class="btn btn-primary" style='margin-bottom: 10px;'>Add User</a>
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Image</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
+                        <?php
+
+                            $users = User::find_all($database);
+
+                            foreach($users as $user) {
+
+                                echo "<tr>";
+                                echo "<td> {$user->id} </td>";
+                                echo "<td> {$user->username} </td>";
+                                echo "<td> {$user->first_name} </td>";
+                                echo "<td> {$user->last_name} </td>";
+                                echo "<td> <img src='images/{$user->user_image}' height=100 width=150> </td>";
+                                echo "<td> <a href='edit_user.php?edit=$user->id'>Edit</a> </td>";
+                                echo "<td> <a href='users.php?delete=$user->id'>Delete</a> </td>";
+                                echo "</tr>";
+                            }
+
+                        ?>
+
+                        <?php
+
+                            if(isset($_GET['delete'])) {
+
+                                $user_id = $_GET['delete'];
+                                $user = User::find_by_id($database,$user_id);
+
+                                if($user->delete()) { redirect("users.php"); }
+                                
+                            }
+
+                        ?>
+
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <!-- /#page-wrapper -->
+        <!-- /.row -->
 
-  <?php include("includes/footer.php"); ?>
+    </div>
+    <!-- /.container-fluid -->
+
+</div>
+<!-- /#page-wrapper -->
+
+<?php include("includes/footer.php"); ?>
